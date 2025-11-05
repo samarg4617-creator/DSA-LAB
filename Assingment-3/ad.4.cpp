@@ -24,17 +24,24 @@ int main() {
     for (int i = 0; i < n; i++) cin >> temp[i];
 
     int ans[n];
-    for (int i = 0; i < n; i++) ans[i] = 0; // default 0
+    for (int i = 0; i < n; i++) ans[i] = 0;
 
-    Stack st; // store indexes, not values
+    Stack st; // stack will store indices
 
-    for (int i = 0; i < n; i++) {
-        // while current temperature is greater than top of stack’s temperature
-        while (!st.isEmpty() && temp[i] > temp[st.peek()]) {
-            int idx = st.pop();
-            ans[idx] = i - idx;  // days waited
+    // Traverse from right to left
+    for (int i = n - 1; i >= 0; i--) {
+        // Pop all days with temperature less than or equal to current day's temperature
+        while (!st.isEmpty() && temp[st.peek()] <= temp[i]) {
+            st.pop();
         }
-        st.push(i); // push current index
+
+        // If stack not empty, top of stack is the next warmer day
+        if (!st.isEmpty()) {
+            ans[i] = st.peek() - i;
+        }
+
+        // Push current day index onto stack
+        st.push(i);
     }
 
     cout << "Answer array: ";
